@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>۱۰ بازی جذاب با جاوااسکریپت</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .home-button {
+            background-color: #f44336;
+            margin-top: 20px;
+        }
+        .home-button:hover {
+            background-color: #d32f2f;
+        }
+        .game-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        canvas {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-page">
+        <h1>به صفحه اصلی بازی‌ها خوش آمدید!</h1>
+        <div class="game-list">
+            <button onclick="showGame('game1')">بازی حدس عدد</button>
+            <button onclick="showGame('game2')">بازی تتریس</button>
+            <button onclick="showGame('game3')">بازی حافظه</button>
+            <button onclick="showGame('game4')">بازی پازل تصویری</button>
+            <button onclick="showGame('game5')">بازی ماشین</button>
+            <button onclick="showGame('game6')">بازی شکار تخم مرغ</button>
+            <button onclick="showGame('game7')">بازی تیراندازی</button>
+            <button onclick="showGame('game8')">بازی مار</button>
+            <button onclick="showGame('game9')">بازی پینگ پنگ</button>
+            <button onclick="showGame('game10')">بازی حدس کلمه</button>
+        </div>
+    </div>
+
+    <div id="game-container" style="display: none;">
+        <button class="home-button" onclick="showMainPage()">خانه</button>
+        <div id="game-content"></div>
+    </div>
+
+    <script>
+        // تابع برای نمایش صفحه اصلی
+        function showMainPage() {
+            document.getElementById("main-page").style.display = "block";
+            document.getElementById("game-container").style.display = "none";
+            document.getElementById("game-content").innerHTML = "";
+        }
+
+        // تابع برای نمایش بازی‌ها
+        function showGame(gameId) {
+            document.getElementById("main-page").style.display = "none";
+            document.getElementById("game-container").style.display = "block";
+            document.getElementById("game-content").innerHTML = "";
+
+            switch (gameId) {
+                case "game1":
+                    loadGame1();
+                    break;
+                case "game2":
+                    loadGame2();
+                    break;
+                case "game3":
+                    loadGame3();
+                    break;
+                case "game4":
+                    loadGame4();
+                    break;
+                case "game5":
+                    loadGame5();
+                    break;
+                case "game6":
+                    loadGame6();
+                    break;
+                case "game7":
+                    loadGame7();
+                    break;
+                case "game8":
+                    loadGame8();
+                    break;
+                case "game9":
+                    loadGame9();
+                    break;
+                case "game10":
+                    loadGame10();
+                    break;
+            }
+        }
+
+        // بازی ۱: بازی حدس عدد
+        function loadGame1() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی حدس عدد</h1>
+                <div class="game-container">
+                    <p>یک عدد بین ۱ تا ۱۰۰ حدس بزنید:</p>
+                    <input type="number" id="guessInput" min="1" max="100">
+                    <button onclick="checkGuess()">حدس بزن</button>
+                    <p class="message" id="message"></p>
+                </div>
+            `;
+
+            const randomNumber = Math.floor(Math.random() * 100) + 1;
+            let attempts = 0;
+
+            window.checkGuess = function () {
+                const guessInput = document.getElementById("guessInput");
+                const message = document.getElementById("message");
+                const guess = parseInt(guessInput.value);
+
+                if (isNaN(guess)) {
+                    message.textContent = "لطفاً یک عدد وارد کنید!";
+                    return;
+                }
+
+                attempts++;
+                if (guess < randomNumber) {
+                    message.textContent = "عدد شما کوچک‌تر است!";
+                } else if (guess > randomNumber) {
+                    message.textContent = "عدد شما بزرگ‌تر است!";
+                } else {
+                    message.textContent = `آفرین! شما عدد ${randomNumber} را در ${attempts} تلاش حدس زدید!`;
+                    guessInput.disabled = true;
+                }
+            };
+        }
+
+        // بازی ۲: بازی تتریس
+        function loadGame2() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی تتریس</h1>
+                <div class="game-container">
+                    <canvas id="tetris" width="300" height="600"></canvas>
+                </div>
+            `;
+
+            const canvas = document.getElementById("tetris");
+            const context = canvas.getContext("2d");
+
+            const ROWS = 20;
+            const COLS = 10;
+            const BLOCK_SIZE = 30;
+
+            const shapes = [
+                [[1, 1, 1, 1]], // I
+                [[1, 1], [1, 1]], // O
+                [[0, 1, 0], [1, 1, 1]], // T
+                [[1, 0, 0], [1, 1, 1]], // L
+                [[0, 0, 1], [1, 1, 1]], // J
+                [[0, 1, 1], [1, 1, 0]], // S
+                [[1, 1, 0], [0, 1, 1]], // Z
+            ];
+
+            let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            let currentPiece = getRandomPiece();
+            let currentPosition = { x: 3, y: 0 };
+
+            function drawBlock(x, y, color) {
+                context.fillStyle = color;
+                context.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                context.strokeStyle = "#000";
+                context.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+
+            function drawBoard() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                board.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            drawBlock(x, y, "blue");
+                        }
+                    });
+                });
+                currentPiece.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            drawBlock(x + currentPosition.x, y + currentPosition.y, "red");
+                        }
+                    });
+                });
+            }
+
+            function getRandomPiece() {
+                const randomIndex = Math.floor(Math.random() * shapes.length);
+                return { shape: shapes[randomIndex], color: "red" };
+            }
+
+            function moveDown() {
+                currentPosition.y++;
+                if (checkCollision()) {
+                    currentPosition.y--;
+                    mergePiece();
+                    removeFullRows();
+                    currentPiece = getRandomPiece();
+                    currentPosition = { x: 3, y: 0 };
+                    if (checkCollision()) {
+                        alert("بازی تمام شد!");
+                        board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+                    }
+                }
+                drawBoard();
+            }
+
+            function mergePiece() {
+                currentPiece.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            board[y + currentPosition.y][x + currentPosition.x] = 1;
+                        }
+                    });
+                });
+            }
+
+            function removeFullRows() {
+                board.forEach((row, y) => {
+                    if (row.every(cell => cell === 1)) {
+                        board.splice(y, 1);
+                        board.unshift(Array(COLS).fill(0));
+                    }
+                });
+            }
+
+            function checkCollision() {
+                return currentPiece.shape.some((row, y) => {
+                    return row.some((value, x) => {
+                        return (
+                            value !== 0 &&
+                            (board[y + currentPosition.y] && board[y + currentPosition.y][x + currentPosition.x]) !== 0
+                        );
+                    });
+                });
+            }
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "ArrowLeft") {
+                    currentPosition.x--;
+                    if (checkCollision()) {
+                        currentPosition.x++;
+                    }
+                }
+                if (event.key === "ArrowRight") {
+                    currentPosition.x++;
+                    if (checkCollision()) {
+                        currentPosition.x--;
+                    }
+                }
+                if (event.key === "ArrowDown") {
+                    moveDown();
+                }
+                drawBoard();
+            });
+
+            setInterval(moveDown, 1000);
+            drawBoard();
+        }
+
+        // بازی ۳: بازی حافظه
+        function loadGame3() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی حافظه</h1>
+                <div class="game-container">
+                    <div id="memory-board"></div>
+                </div>
+            `;
+
+            const cards = ["A", "A", "B", "B", "C", "C", "D", "D", "E", "E", "F", "F"];
+            let flippedCards = [];
+            let matchedCards = [];
+
+            function shuffle(array) {
+                return array.sort(() => Math.random() - 0.5);
+            }
+
+            function createBoard() {
+                const board = document.getElementById("memory-board");
+                shuffle(cards).forEach((card, index) => {
+                    const cardElement = document.createElement("div");
+                    cardElement.classList.add("card");
+                    cardElement.dataset.value = card;
+                    cardElement.dataset.index = index;
+                    cardElement.addEventListener("click", flipCard);
+                    board.appendChild(cardElement);
+                });
+            }
+
+            function flipCard() {
+                if (flippedCards.length < 2 && !flippedCards.includes(this)) {
+                    this.textContent = this.dataset.value;
+                    flippedCards.push(this);
+                    if (flippedCards.length === 2) {
+                        checkMatch();
+                    }
+                }
+            }
+
+            function checkMatch() {
+                const [card1, card2] = flippedCards;
+                if (card1.dataset.value === card2.dataset.value) {
+                    matchedCards.push(card1, card2);
+                    if (matchedCards.length === cards.length) {
+                        alert("تبریک! شما برنده شدید!");
+                    }
+                } else {
+                    setTimeout(() => {
+                        card1.textContent = "";
+                        card2.textContent = "";
+                    }, 1000);
+                }
+                flippedCards = [];
+            }
+
+            createBoard();
+        }
+
+        // بازی ۴: بازی پازل تصویری
+        function loadGame4() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی پازل تصویری</h1>
+                <div class="game-container">
+                    <div id="puzzle-board"></div>
+                </div>
+            `;
+
+            const puzzleBoard = document.getElementById("puzzle-board");
+            const pieces = ["1", "2", "3", "4", "5", "6", "7", "8", ""];
+
+            function shuffle(array) {
+                return array.sort(() => Math.random() - 0.5);
+            }
+
+            function createBoard() {
+                shuffle(pieces).forEach((piece, index) => {
+                    const pieceElement = document.createElement("div");
+                    pieceElement.classList.add("puzzle-piece");
+                    pieceElement.textContent = piece;
+                    pieceElement.addEventListener("click", movePiece);
+                    puzzleBoard.appendChild(pieceElement);
+                });
+            }
+
+            function movePiece() {
+                const emptyPiece = document.querySelector(".puzzle-piece:empty");
+                if (isAdjacent(this, emptyPiece)) {
+                    [this.textContent, emptyPiece.textContent] = [emptyPiece.textContent, this.textContent];
+                    checkWin();
+                }
+            }
+
+            function isAdjacent(piece1, piece2) {
+                const index1 = Array.from(puzzleBoard.children).indexOf(piece1);
+                const index2 = Array.from(puzzleBoard.children).indexOf(piece2);
+                return Math.abs(index1 - index2) === 1 || Math.abs(index1 - index2) === 3;
+            }
+
+            function checkWin() {
+                const currentPieces = Array.from(puzzleBoard.children).map(piece => piece.textContent);
+                if (currentPieces.join("") === "12345678") {
+                    alert("تبریک! شما پازل را حل کردید!");
+                }
+            }
+
+            createBoard();
+        }
+
+        // بازی ۵: بازی ماشین
+        function loadGame5() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی ماشین</h1>
+                <div class="game-container">
+                    <canvas id="racing-game" width="300" height="600"></canvas>
+                </div>
+            `;
+
+            const canvas = document.getElementById("racing-game");
+            const context = canvas.getContext("2d");
+
+            const car = {
+                x: 125,
+                y: 500,
+                width: 50,
+                height: 100,
+                speed: 5,
+            };
+
+            const obstacles = [];
+            let score = 0;
+
+            function drawCar() {
+                context.fillStyle = "blue";
+                context.fillRect(car.x, car.y, car.width, car.height);
+            }
+
+            function drawObstacles() {
+                context.fillStyle = "red";
+                obstacles.forEach(obstacle => {
+                    context.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                });
+            }
+
+            function updateObstacles() {
+                if (Math.random() < 0.02) {
+                    const width = Math.random() * 100 + 50;
+                    obstacles.push({
+                        x: Math.random() * (canvas.width - width),
+                        y: 0,
+                        width: width,
+                        height: 20,
+                    });
+                }
+                obstacles.forEach(obstacle => {
+                    obstacle.y += 5;
+                });
+                obstacles.forEach((obstacle, index) => {
+                    if (obstacle.y > canvas.height) {
+                        obstacles.splice(index, 1);
+                        score++;
+                    }
+                });
+            }
+
+            function checkCollision() {
+                return obstacles.some(obstacle => {
+                    return (
+                        car.x < obstacle.x + obstacle.width &&
+                        car.x + car.width > obstacle.x &&
+                        car.y < obstacle.y + obstacle.height &&
+                        car.y + car.height > obstacle.y
+                    );
+                });
+            }
+
+            function drawScore() {
+                context.fillStyle = "black";
+                context.font = "20px Arial";
+                context.fillText(`امتیاز: ${score}`, 10, 30);
+            }
+
+            function gameLoop() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawCar();
+                drawObstacles();
+                updateObstacles();
+                drawScore();
+                if (checkCollision()) {
+                    alert("بازی تمام شد!");
+                    document.location.reload();
+                }
+                requestAnimationFrame(gameLoop);
+            }
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "ArrowLeft" && car.x > 0) {
+                    car.x -= car.speed;
+                }
+                if (event.key === "ArrowRight" && car.x < canvas.width - car.width) {
+                    car.x += car.speed;
+                }
+            });
+
+            gameLoop();
+        }
+
+        // بازی ۶: بازی شکار تخم مرغ
+        function loadGame6() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی شکار تخم مرغ</h1>
+                <div class="game-container">
+                    <canvas id="egg-catcher" width="300" height="600"></canvas>
+                </div>
+            `;
+
+            const canvas = document.getElementById("egg-catcher");
+            const context = canvas.getContext("2d");
+
+            const basket = {
+                x: 100,
+                y: 550,
+                width: 100,
+                height: 50,
+                speed: 10,
+            };
+
+            const eggs = [];
+            let score = 0;
+
+            function drawBasket() {
+                context.fillStyle = "green";
+                context.fillRect(basket.x, basket.y, basket.width, basket.height);
+            }
+
+            function drawEggs() {
+                context.fillStyle = "yellow";
+                eggs.forEach(egg => {
+                    context.beginPath();
+                    context.arc(egg.x, egg.y, egg.radius, 0, Math.PI * 2);
+                    context.fill();
+                });
+            }
+
+            function updateEggs() {
+                if (Math.random() < 0.02) {
+                    eggs.push({
+                        x: Math.random() * canvas.width,
+                        y: 0,
+                        radius: 10,
+                        speed: 3,
+                    });
+                }
+                eggs.forEach(egg => {
+                    egg.y += egg.speed;
+                });
+                eggs.forEach((egg, index) => {
+                    if (egg.y > canvas.height) {
+                        eggs.splice(index, 1);
+                    }
+                });
+            }
+
+            function checkCollision() {
+                return eggs.some((egg, index) => {
+                    if (
+                        egg.x > basket.x &&
+                        egg.x < basket.x + basket.width &&
+                        egg.y > basket.y &&
+                        egg.y < basket.y + basket.height
+                    ) {
+                        eggs.splice(index, 1);
+                        score++;
+                        return true;
+                    }
+                    return false;
+                });
+            }
+
+            function drawScore() {
+                context.fillStyle = "black";
+                context.font = "20px Arial";
+                context.fillText(`امتیاز: ${score}`, 10, 30);
+            }
+
+            function gameLoop() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawBasket();
+                drawEggs();
+                updateEggs();
+                drawScore();
+                requestAnimationFrame(gameLoop);
+            }
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "ArrowLeft" && basket.x > 0) {
+                    basket.x -= basket.speed;
+                }
+                if (event.key === "ArrowRight" && basket.x < canvas.width - basket.width) {
+                    basket.x += basket.speed;
+                }
+            });
+
+            gameLoop();
+        }
+
+        // بازی ۷: بازی تیراندازی
+        function loadGame7() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی تیراندازی</h1>
+                <div class="game-container">
+                    <canvas id="shooting-game" width="300" height="600"></canvas>
+                </div>
+            `;
+
+            const canvas = document.getElementById("shooting-game");
+            const context = canvas.getContext("2d");
+
+            const player = {
+                x: 125,
+                y: 550,
+                width: 50,
+                height: 50,
+                speed: 10,
+            };
+
+            const bullets = [];
+            const targets = [];
+            let score = 0;
+
+            function drawPlayer() {
+                context.fillStyle = "blue";
+                context.fillRect(player.x, player.y, player.width, player.height);
+            }
+
+            function drawBullets() {
+                context.fillStyle = "red";
+                bullets.forEach(bullet => {
+                    context.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+                });
+            }
+
+            function drawTargets() {
+                context.fillStyle = "green";
+                targets.forEach(target => {
+                    context.fillRect(target.x, target.y, target.width, target.height);
+                });
+            }
+
+            function updateBullets() {
+                bullets.forEach((bullet, index) => {
+                    bullet.y -= bullet.speed;
+                    if (bullet.y < 0) {
+                        bullets.splice(index, 1);
+                    }
+                });
+            }
+
+            function updateTargets() {
+                if (Math.random() < 0.02) {
+                    targets.push({
+                        x: Math.random() * (canvas.width - 50),
+                        y: 0,
+                        width: 50,
+                        height: 50,
+                        speed: 3,
+                    });
+                }
+                targets.forEach(target => {
+                    target.y += target.speed;
+                });
+                targets.forEach((target, index) => {
+                    if (target.y > canvas.height) {
+                        targets.splice(index, 1);
+                    }
+                });
+            }
+
+            function checkCollision() {
+                bullets.forEach((bullet, bulletIndex) => {
+                    targets.forEach((target, targetIndex) => {
+                        if (
+                            bullet.x < target.x + target.width &&
+                            bullet.x + bullet.width > target.x &&
+                            bullet.y < target.y + target.height &&
+                            bullet.y + bullet.height > target.y
+                        ) {
+                            bullets.splice(bulletIndex, 1);
+                            targets.splice(targetIndex, 1);
+                            score++;
+                        }
+                    });
+                });
+            }
+
+            function drawScore() {
+                context.fillStyle = "black";
+                context.font = "20px Arial";
+                context.fillText(`امتیاز: ${score}`, 10, 30);
+            }
+
+            function gameLoop() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawPlayer();
+                drawBullets();
+                drawTargets();
+                updateBullets();
+                updateTargets();
+                checkCollision();
+                drawScore();
+                requestAnimationFrame(gameLoop);
+            }
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "ArrowLeft" && player.x > 0) {
+                    player.x -= player.speed;
+                }
+                if (event.key === "ArrowRight" && player.x < canvas.width - player.width) {
+                    player.x += player.speed;
+                }
+                if (event.key === " ") {
+                    bullets.push({
+                        x: player.x + player.width / 2 - 5,
+                        y: player.y,
+                        width: 10,
+                        height: 10,
+                        speed: 10,
+                    });
+                }
+            });
+
+            gameLoop();
+        }
+
+        // بازی ۸: بازی مار
+        function loadGame8() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی مار</h1>
+                <div class="game-container">
+                    <canvas id="snake-game" width="300" height="300"></canvas>
+                </div>
+            `;
+
+            const canvas = document.getElementById("snake-game");
+            const context = canvas.getContext("2d");
+
+            const gridSize = 20;
+            const tileCount = canvas.width / gridSize;
+
+            let snake = [{ x: 10, y: 10 }];
+            let direction = { x: 0, y: 0 };
+            let food = { x: 5, y: 5 };
+            let score = 0;
+
+            function drawSnake() {
+                context.fillStyle = "green";
+                snake.forEach(segment => {
+                    context.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+                });
+            }
+
+            function drawFood() {
+                context.fillStyle = "red";
+                context.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+            }
+
+            function updateSnake() {
+                const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    placeFood();
+                } else {
+                    snake.pop();
+                }
+            }
+
+            function placeFood() {
+                food.x = Math.floor(Math.random() * tileCount);
+                food.y = Math.floor(Math.random() * tileCount);
+            }
+
+            function checkCollision() {
+                const head = snake[0];
+                if (
+                    head.x < 0 || head.x >= tileCount ||
+                    head.y < 0 || head.y >= tileCount ||
+                    snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)
+                ) {
+                    alert("بازی تمام شد!");
+                    document.location.reload();
+                }
+            }
+
+            function drawScore() {
+                context.fillStyle = "black";
+                context.font = "20px Arial";
+                context.fillText(`امتیاز: ${score}`, 10, 30);
+            }
+
+            function gameLoop() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawSnake();
+                drawFood();
+                updateSnake();
+                checkCollision();
+                drawScore();
+                setTimeout(() => requestAnimationFrame(gameLoop), 100);
+            }
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "ArrowUp" && direction.y === 0) {
+                    direction = { x: 0, y: -1 };
+                }
+                if (event.key === "ArrowDown" && direction.y === 0) {
+                    direction = { x: 0, y: 1 };
+                }
+                if (event.key === "ArrowLeft" && direction.x === 0) {
+                    direction = { x: -1, y: 0 };
+                }
+                if (event.key === "ArrowRight" && direction.x === 0) {
+                    direction = { x: 1, y: 0 };
+                }
+            });
+
+            placeFood();
+            gameLoop();
+        }
+
+        // بازی ۹: بازی پینگ پنگ
+        function loadGame9() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی پینگ پنگ</h1>
+                <div class="game-container">
+                    <canvas id="ping-pong" width="300" height="600"></canvas>
+                </div>
+            `;
+
+            const canvas = document.getElementById("ping-pong");
+            const context = canvas.getContext("2d");
+
+            const paddleWidth = 100;
+            const paddleHeight = 10;
+            const ballRadius = 10;
+
+            const player = {
+                x: canvas.width / 2 - paddleWidth / 2,
+                y: canvas.height - paddleHeight - 10,
+                width: paddleWidth,
+                height: paddleHeight,
+                speed: 10,
+            };
+
+            const ball = {
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                radius: ballRadius,
+                dx: 4,
+                dy: -4,
+            };
+
+            let score = 0;
+
+            function drawPaddle() {
+                context.fillStyle = "blue";
+                context.fillRect(player.x, player.y, player.width, player.height);
+            }
+
+            function drawBall() {
+                context.beginPath();
+                context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                context.fillStyle = "red";
+                context.fill();
+                context.closePath();
+            }
+
+            function updateBall() {
+                ball.x += ball.dx;
+                ball.y += ball.dy;
+
+                if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+                    ball.dx = -ball.dx;
+                }
+                if (ball.y - ball.radius < 0) {
+                    ball.dy = -ball.dy;
+                }
+                if (
+                    ball.y + ball.radius > player.y &&
+                    ball.x > player.x &&
+                    ball.x < player.x + player.width
+                ) {
+                    ball.dy = -ball.dy;
+                    score++;
+                }
+                if (ball.y + ball.radius > canvas.height) {
+                    alert("بازی تمام شد!");
+                    document.location.reload();
+                }
+            }
+
+            function drawScore() {
+                context.fillStyle = "black";
+                context.font = "20px Arial";
+                context.fillText(`امتیاز: ${score}`, 10, 30);
+            }
+
+            function gameLoop() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawPaddle();
+                drawBall();
+                updateBall();
+                drawScore();
+                requestAnimationFrame(gameLoop);
+            }
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "ArrowLeft" && player.x > 0) {
+                    player.x -= player.speed;
+                }
+                if (event.key === "ArrowRight" && player.x < canvas.width - player.width) {
+                    player.x += player.speed;
+                }
+            });
+
+            gameLoop();
+        }
+
+        // بازی ۱۰: بازی حدس کلمه
+        function loadGame10() {
+            const gameContent = document.getElementById("game-content");
+            gameContent.innerHTML = `
+                <h1>بازی حدس کلمه</h1>
+                <div class="game-container">
+                    <p id="word-display"></p>
+                    <input type="text" id="guess-input" maxlength="1">
+                    <button onclick="checkGuess()">حدس بزن</button>
+                    <p id="message"></p>
+                </div>
+            `;
+
+            const words = ["برنامه", "کامپیوتر", "اینترنت", "هوش", "مصنوعی"];
+            let selectedWord = words[Math.floor(Math.random() * words.length)];
+            let guessedWord = Array(selectedWord.length).fill("_");
+            let attempts = 0;
+
+            const wordDisplay = document.getElementById("word-display");
+            const guessInput = document.getElementById("guess-input");
+            const message = document.getElementById("message");
+
+            function displayWord() {
+                wordDisplay.textContent = guessedWord.join(" ");
+            }
+
+            window.checkGuess = function () {
+                const guess = guessInput.value;
+                if (selectedWord.includes(guess)) {
+                    selectedWord.split("").forEach((letter, index) => {
+                        if (letter === guess) {
+                            guessedWord[index] = guess;
+                        }
+                    });
+                    if (!guessedWord.includes("_")) {
+                        message.textContent = "تبریک! شما برنده شدید!";
+                        guessInput.disabled = true;
+                    }
+                } else {
+                    attempts++;
+                    if (attempts >= 5) {
+                        message.textContent = `متاسفانه باختید! کلمه صحیح "${selectedWord}" بود.`;
+                        guessInput.disabled = true;
+                    } else {
+                        message.textContent = `حدس شما اشتباه است! ${5 - attempts} تلاش باقی مانده.`;
+                    }
+                }
+                displayWord();
+                guessInput.value = "";
+            };
+
+            displayWord();
+        }
+    </script>
+</body>
+</html>
